@@ -24,6 +24,7 @@ SubProceso pedirDatosUsuario(usuarios Por Referencia,dni,numUsuarios)
 	Leer usuarios[numUsuarios,4];
 	Escribir "Introduce tu Provincia : ";
 	Leer usuarios[numUsuarios,5];
+	numUsuarios<-numUsuarios+1;
 FinSubProceso
 
 Proceso GESTIONCDS
@@ -43,12 +44,18 @@ Proceso GESTIONCDS
 	Escribir "Bienvenido a la Tienda. Introduce tu DNI";
 	Leer dni;
 	Si (numUsuarios=0) entonces
-		usuarios[0,6]<-"A";
+		usuarios[numUsuarios,6]<-"A";
+		pedirDatosUsuario(usuarios,dni,numUsuarios);
 	SiNo
-		usuarios[0,6]<-"C";
+		Tipo<-buscarDni(usuarios,dni,numUsuarios);
+		si(Tipo="N") Entonces
+			usuarios[numUsuarios,6]<-"C";
+			pedirDatosUsuario(usuarios,dni,numUsuarios);
+		//Introducir que haría el cliente en un sino
+		FinSi
 	FinSi
-	pedirDatosUsuario(usuarios,dni,numUsuarios);
-	numUsuarios<-numUsuarios+1;
+	
+	
 	
 	
 	
