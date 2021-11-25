@@ -7,7 +7,7 @@ Funcion resultado<-TipoUsuario(dni,clientes,numClientes,dniAdministrador)
 	SiNo
 		Para i<-0 hasta numClientes-1 Hacer
 			Si(dni=clientes[i,0]) entonces
-				resultado<-i+1;
+				resultado<-i+1;//Devuelve 1 para el primer cliente y 100 para el ultimo
 				i<-numclientes;
 			FinSi
 		FinPara
@@ -119,45 +119,60 @@ Proceso gestion_Cds
 	numAlquileres<-0;
 	resultado<-2;
 	Datos(Clientes, numClientes,Cds,numCds);
-	Escribir "Introduce el dni";
-	Leer dni;
-	resultado<-TipoUsuario(dni,clientes,numClientes,dniAdministrador);
-	Segun resultado hacer
-		0:Escribir "ADMINISTRADOR DEL SISTEMA";
-			Escribir "============================";
-			Escribir "1.-Añadir CD.";
-			Escribir "2.-Eliminar CD.";
-			Escribir "3.-Modificar CD.";
-			Escribir "4.-Obtener listado de clientes.";
-			Escribir "5.-Listado de Prestamos.";
-			Leer peticion;
-			Segun peticion hacer
-				1:ListarCDS(Cds,numCds);
-				  AnyadirCd(numCds,Cds); 
-				  ListarCDS(Cds,numCds);
-			  2:ListarCDS(Cds,numCds);
-				  Escribir "Introduzca el numero de CD a eliminar:";//PEDIR EL CD A MODIFICAR
-				  Leer cd;
-				  EliminarCd(Cds,numCdspor,Cd);		
-				  ListarCDS(Cds,numCds);
-				3:ListarCDS(Cds,numCds);
-				  Escribir "Introduzca el numero de CD a modificar:";//PEDIR EL CD A MODIFICAR
-				  Leer cd;
-				  ModificarCd(Cds,numCds,Cd);
-				  ListarCDS(Cds,numCds);
-				4:ListarClientes(Clientes,numClientes);
-				5:ListarAlquileres(Alquileres,numAlquileres);
+	Repetir 
+		Escribir "Introduce el dni(Para salir pon un 0)";
+		Leer dni;
+		si(dni<>"0") entonces
+			resultado<-TipoUsuario(dni,clientes,numClientes,dniAdministrador);
+			Segun resultado hacer
+				0:Escribir "ADMINISTRADOR DEL SISTEMA";
+					Escribir "============================";
+					Escribir "1.-Añadir CD.";
+					Escribir "2.-Eliminar CD.";
+					Escribir "3.-Modificar CD.";
+					Escribir "4.-Obtener listado de clientes.";
+					Escribir "5.-Listado de Prestamos.";
+					Escribir "0.-Para SAlir";
+					Leer peticion;
+					Repetir
+						Segun peticion hacer
+							1:ListarCDS(Cds,numCds);
+							  AnyadirCd(numCds,Cds); 
+							  ListarCDS(Cds,numCds);
+						  2:ListarCDS(Cds,numCds);
+							  Escribir "Introduzca el numero de CD a eliminar:";//PEDIR EL CD A MODIFICAR
+							  Leer cd;
+							  EliminarCd(Cds,numCds,Cd);		
+							  ListarCDS(Cds,numCds);
+							3:ListarCDS(Cds,numCds);
+							  Escribir "Introduzca el numero de CD a modificar:";//PEDIR EL CD A MODIFICAR
+							  Leer cd;
+							  ModificarCd(Cds,numCds,Cd);
+							  ListarCDS(Cds,numCds);
+							4:ListarClientes(Clientes,numClientes);
+							5:ListarAlquileres(Alquileres,numAlquileres);
+						FinSegun
+					hasta que (peticion=0)
+				101://No exsite el cliente
+					//PedirDatosCliente
+					resultado<-numClientes+1;
+				De otro Modo:Escribir "CLIENTE DEL SISTEMA";
+					Escribir "============================";
+					Escribir "1.-Alquilar CD.";
+					Escribir "2.-Devolver CD.";
+					Leer tecla_;
+					Segun ConvertirANumero(tecla_) Hacer
+						1:ListarCDS(Cds,numCds);
+							Escribir "Que CD quiere alquilar";
+							Leer peticion;
+							AlquilarCd(dni,peticion,cds,alquileres,numAlquileres);
+						2:ListarCDSAlquilados(dni,Cds,numCds,alquileres,numAlquileres);	
+							Escribir "Que CD quiere devolver";
+							Leer peticion;
+							EliminarCdAlquiler(dni,Cds[peticion,0],alquileres,numAlquileres);
+							ListarCDSAlquilados(dni,Cds,numCds,alquileres,numAlquileres);	
+					FinSegun
 			FinSegun
-			
-		101:Escribir "No existe el cliente";
-			
-		De Otro modo: Escribir "ALQUILER DE CDS";
-			Escribir "============================";
-			ListarCDS(Cds,numCds);
-			Escribir "Que CD quiere alquilar";
-			Leer peticion;
-			Alquileres[numAlquileres,0]<-cds[0,0];
-			Alquileres[numAlquileres,1]<-Clientes[resultado-1,0];
-			numAlquileres<-numAlquileres+1;
-	FinSegun
+		FinSi
+	hasta que (dni="0");	
 FinProceso
